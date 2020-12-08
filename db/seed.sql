@@ -4,4 +4,4 @@ name VARCHAR(40) NOT NULL,
 description VARCHAR(80) NOT NULL,
 price INTEGER,
 image_url TEXT
-)
+);
