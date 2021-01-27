@@ -1,68 +1,65 @@
-const { Update } = require("massive");
-
 module.exports = {
-  create: (req, res, next) => {
-    const dbInstance = req.app.get("db");
+  create: (req, res) => {
+    const db = req.app.get("db");
     const { name, description, price, image_url } = req.body;
 
-    //this is a function of massive
-    dbInstance
-      .create_product([name, description, price, image_url])
-      .then(() => res.sendStatus(200))
+    db.create_product(name, description, price, image_url)
+      .then((product) => {
+        res.status(200).send(product);
+      })
       .catch((err) => {
-        res.status(500).send({ errorMessage: "=OwO= Someting went wong" });
-        console.log(err);
+        res.status(500).send(`Oh no!  Something went wrong! ${err}`);
       });
   },
 
-  getOne: (req, res, next) => {
-    const dbInstance = req.app.get("db");
-    const { id } = req.params;
-
-    dbInstance
-      .read_product(id)
-      .then((product) => res.sendStatus(200).send(product))
+  getAll: (req, res) => {
+    const db = req.app.get("db");
+    db.read_products()
+      .then((product) => {
+        res.status(200).send(product);
+      })
       .catch((err) => {
-        res.status(500).send({ errorMessage: "=OwO= Someting went wong" });
-        console.log(err);
+        res.status(500).send(`Oh no!  Something went wrong! ${err}`);
       });
   },
 
-  getAll: (req, res, next) => {
-    const dbInstance = req.app.get("db");
+  getOne: (req, res) => {
+    const db = req.app.get("db");
+    const { product_id } = req.params;
 
-    dbInstance
-      .read_products()
-      .then((products) => res.sendStatus(200).send(products))
+    db.read_product(product_id)
+      .then((product) => {
+        res.status(200).send(product);
+      })
       .catch((err) => {
-        res.status(500).send({ errorMessage: "=OwO= Someting went wong" });
-        console.log(err);
+        res.status(500).send(`Oh no!  Something went wrong! ${err}`);
       });
   },
 
-  update: (req, res, next) => {
-    const dbInstance = req.app.get("db");
-    const { params, query } = req;
+  update: (req, res) => {
+    const db = req.app.get("db");
+    const { product_id } = req.params;
+    const { description } = req.body;
 
-    dbInstance
-      .update_product([params.id, query.desc])
-      .then(() => res.sendStatus(200))
+    db.update_product(product_id, description)
+      .then((product) => {
+        res.status(200).send(product);
+      })
       .catch((err) => {
-        res.status(500).send({ errorMessage: "=OwO= Someting went wong" });
-        console.log(err);
+        res.status(500).send(`Oh no!  Something went wrong! =OwO= ${err}`);
       });
   },
 
-  delete: (req, res, next) => {
-    const dbInstance = req.app.get("db");
-    const { id } = req.params;
+  delete: (req, res) => {
+    const db = req.app.get("db");
+    const { product_id } = req.params;
 
-    dbInstance
-      .delete_product(id)
-      .then(() => res.sendStatus(200))
+    db.delete_product(product_id)
+      .then((product) => {
+        res.status(200).send(product);
+      })
       .catch((err) => {
-        res.status(500).send({ errorMessage: "=OwO= Someting went wong" });
-        console.log(err);
+        res.status(500).send(`Oh no!  Something went wrong! =OwO= ${err}`);
       });
   },
 };
