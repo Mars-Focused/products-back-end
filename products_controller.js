@@ -3,10 +3,10 @@ const { Update } = require("massive");
 module.exports = {
   create: (req, res, next) => {
     const dbInstance = req.app.get("db");
-    const { name, description, price, image_url } = req.params;
+    const { name, description, price, image_url } = req.body;
 
+    //this is a function of massive
     dbInstance
-      //ask about the use of square brackets here
       .create_product([name, description, price, image_url])
       .then(() => res.sendStatus(200))
       .catch((err) => {
@@ -21,7 +21,7 @@ module.exports = {
 
     dbInstance
       .read_product(id)
-      .then(() => res.sendStatus(200))
+      .then((product) => res.sendStatus(200).send(product))
       .catch((err) => {
         res.status(500).send({ errorMessage: "=OwO= Someting went wong" });
         console.log(err);
@@ -33,7 +33,7 @@ module.exports = {
 
     dbInstance
       .read_products()
-      .then(() => res.sendStatus(200))
+      .then((products) => res.sendStatus(200).send(products))
       .catch((err) => {
         res.status(500).send({ errorMessage: "=OwO= Someting went wong" });
         console.log(err);
